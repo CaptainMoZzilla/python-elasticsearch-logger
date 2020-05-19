@@ -116,6 +116,7 @@ class CMRESHandler(logging.Handler):
         """
         return "{0!s}-{1!s}".format(es_index_name, datetime.datetime.now().strftime('%Y'))
 
+    @staticmethod
     def _get_never_index_name(es_index_name):
         """ Return elasticsearch index name
         :param: index_name name of the index
