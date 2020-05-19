@@ -56,6 +56,7 @@ class CMRESHandler(logging.Handler):
         WEEKLY = 1
         MONTHLY = 2
         YEARLY = 3
+        NEVER = 4
 
     # Defaults for the class
     __DEFAULT_ELASTICSEARCH_HOST = [{'host': 'localhost', 'port': 9200}]
@@ -67,7 +68,7 @@ class CMRESHandler(logging.Handler):
     __DEFAULT_USE_SSL = False
     __DEFAULT_VERIFY_SSL = True
     __DEFAULT_AUTH_TYPE = AuthType.NO_AUTH
-    __DEFAULT_INDEX_FREQUENCY = IndexNameFrequency.DAILY
+    __DEFAULT_INDEX_FREQUENCY = IndexNameFrequency.NEVER
     __DEFAULT_BUFFER_SIZE = 1000
     __DEFAULT_FLUSH_FREQ_INSEC = 1
     __DEFAULT_ADDITIONAL_FIELDS = {}
@@ -115,11 +116,20 @@ class CMRESHandler(logging.Handler):
         """
         return "{0!s}-{1!s}".format(es_index_name, datetime.datetime.now().strftime('%Y'))
 
+    def _get_never_index_name(es_index_name):
+        """ Return elasticsearch index name
+        :param: index_name name of the index
+        :return: name without any modifications
+        """
+        return es_index_name
+
+
     _INDEX_FREQUENCY_FUNCION_DICT = {
         IndexNameFrequency.DAILY: _get_daily_index_name,
         IndexNameFrequency.WEEKLY: _get_weekly_index_name,
         IndexNameFrequency.MONTHLY: _get_monthly_index_name,
-        IndexNameFrequency.YEARLY: _get_yearly_index_name
+        IndexNameFrequency.YEARLY: _get_yearly_index_name,
+        IndexNameFrequency.NEVER: _get_never_index_name
     }
 
     def __init__(self,
